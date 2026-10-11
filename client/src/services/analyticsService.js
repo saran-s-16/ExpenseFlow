@@ -1,4 +1,4 @@
-import api from "./api";
+import api, { API_BASE_URL } from "./api";
 
 export async function getAnalytics(params = {}) {
     const res = await api.get("/analytics", { params });
@@ -9,7 +9,7 @@ export async function downloadCsvExport(params = {}) {
     const query = new URLSearchParams(params).toString();
     const token = localStorage.getItem("expenseflow_token");
 
-    const response = await fetch(`http://localhost:5000/api/analytics/export?${query}`, {
+    const response = await fetch(`${API_BASE_URL}/analytics/export?${query}`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
