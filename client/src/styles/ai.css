@@ -1,0 +1,730 @@
+/* =========================================
+   EXPENSEFLOW AI - PREMIUM EMERALD GLASS DESIGN
+========================================= */
+
+.ai-assistant-page {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 120px);
+    max-height: 940px;
+    width: 100%;
+    margin: 0 auto;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    box-shadow: var(--shadow-glass);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    overflow: hidden;
+    position: relative;
+}
+
+/* =========================================
+   AI HEADER
+========================================= */
+
+.ai-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--card-border);
+    background: rgba(16, 26, 20, 0.4);
+    backdrop-filter: blur(12px);
+    flex-shrink: 0;
+    gap: 16px;
+}
+
+.ai-header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.ai-assistant-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+    flex-shrink: 0;
+}
+
+.ai-assistant-avatar.large {
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+    box-shadow: 0 6px 24px rgba(16, 185, 129, 0.4);
+}
+
+.ai-header-titles h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+    letter-spacing: -0.3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ai-data-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 100px;
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.ai-header-titles p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 2px 0 0 0;
+}
+
+.ai-header-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+/* Token Allowance Badge */
+.ai-token-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.22);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+}
+
+.ai-token-reset-tag {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    opacity: 0.85;
+    margin-left: 2px;
+}
+
+
+.ai-token-pill.low {
+    background: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.3);
+    color: #fbbf24;
+}
+
+.ai-token-pill.exhausted {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #f87171;
+}
+
+.ai-token-pill-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+}
+
+.ai-token-pill.low .ai-token-pill-dot {
+    background: #f59e0b;
+    box-shadow: 0 0 8px #f59e0b;
+}
+
+.ai-token-pill.exhausted .ai-token-pill-dot {
+    background: #ef4444;
+    box-shadow: 0 0 8px #ef4444;
+}
+
+.ai-btn-ghost {
+    background: transparent;
+    border: 1px solid var(--card-border);
+    color: var(--text-secondary);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.ai-btn-ghost:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+/* =========================================
+   CONVERSATION BODY & SCROLL AREA
+========================================= */
+
+.ai-conversation-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    scroll-behavior: smooth;
+}
+
+.ai-conversation-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.ai-conversation-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.ai-conversation-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 3px;
+}
+
+.ai-conversation-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* =========================================
+   WELCOME HERO SECTION
+========================================= */
+
+.ai-welcome-box {
+    margin: 10px auto 20px;
+    max-width: 720px;
+    text-align: center;
+    padding: 32px 24px 28px;
+    background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.12), transparent 75%),
+                rgba(20, 30, 24, 0.5);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 20px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+.ai-welcome-icon-wrap {
+    display: inline-flex;
+    margin-bottom: 16px;
+}
+
+.ai-welcome-box h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 10px;
+}
+
+.ai-welcome-box p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin: 0 auto;
+    max-width: 580px;
+}
+
+.ai-privacy-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 14px;
+    font-size: 12px;
+    color: #6ee7b7;
+    font-weight: 500;
+}
+
+/* =========================================
+   SUGGESTED QUESTIONS SECTION
+========================================= */
+
+.ai-suggestions-container {
+    max-width: 820px;
+    margin: 0 auto 16px;
+    width: 100%;
+}
+
+.ai-suggestions-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+.ai-suggestions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 10px;
+}
+
+.ai-suggestion-card {
+    background: rgba(22, 34, 27, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 12px 14px;
+    text-align: left;
+    color: var(--text-primary);
+    font-size: 13.5px;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.ai-suggestion-card:hover:not(:disabled) {
+    background: rgba(16, 185, 129, 0.12);
+    border-color: rgba(16, 185, 129, 0.35);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+}
+
+.ai-suggestion-card:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.ai-suggestion-arrow {
+    color: #34d399;
+    flex-shrink: 0;
+    opacity: 0.6;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.ai-suggestion-card:hover .ai-suggestion-arrow {
+    opacity: 1;
+    transform: translateX(2px);
+}
+
+/* =========================================
+   MESSAGE BUBBLES
+========================================= */
+
+.ai-message-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+}
+
+.ai-message-row.user {
+    justify-content: flex-end;
+}
+
+.ai-message-row.assistant {
+    justify-content: flex-start;
+}
+
+.ai-msg-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.ai-msg-avatar.assistant {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #ffffff;
+    box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+}
+
+.ai-msg-avatar.user {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: #ffffff;
+}
+
+.ai-message-bubble {
+    max-width: 78%;
+    padding: 14px 18px;
+    border-radius: 18px;
+    font-size: 14.5px;
+    line-height: 1.55;
+    word-break: break-word;
+    position: relative;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.ai-message-row.user .ai-message-bubble {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: #ffffff;
+    border-bottom-right-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.ai-message-row.assistant .ai-message-bubble {
+    background: rgba(22, 34, 27, 0.75);
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-bottom-left-radius: 4px;
+    backdrop-filter: blur(16px);
+}
+
+.ai-message-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    margin-top: 6px;
+    color: var(--text-secondary);
+}
+
+.ai-message-row.user .ai-message-meta {
+    color: rgba(255, 255, 255, 0.75);
+    justify-content: flex-end;
+}
+
+.ai-token-chip {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    padding: 1px 6px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/* =========================================
+   MARKDOWN CONTENT STYLING
+========================================= */
+
+.ai-markdown-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ai-markdown-p {
+    margin: 0;
+    line-height: 1.6;
+}
+
+.ai-markdown-h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #34d399;
+    margin: 8px 0 2px;
+}
+
+.ai-markdown-h4 {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: #6ee7b7;
+    margin: 6px 0 2px;
+}
+
+.ai-markdown-bold {
+    font-weight: 700;
+    color: #e6f9ed;
+}
+
+[data-theme="light"] .ai-markdown-bold {
+    color: #111827;
+}
+
+.ai-markdown-code {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 12.5px;
+    color: #a7f3d0;
+}
+
+.ai-markdown-list,
+.ai-markdown-list-ordered {
+    margin: 4px 0 6px 20px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.ai-markdown-list li,
+.ai-markdown-list-ordered li {
+    line-height: 1.5;
+}
+
+/* =========================================
+   TYPING & LOADING INDICATOR
+========================================= */
+
+.ai-typing-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+}
+
+.ai-typing-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #10b981;
+    animation: aiDotPulse 1.4s infinite ease-in-out both;
+}
+
+.ai-typing-dot:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.ai-typing-dot:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+@keyframes aiDotPulse {
+    0%, 80%, 100% {
+        transform: scale(0.6);
+        opacity: 0.4;
+    }
+    40% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+}
+
+/* =========================================
+   ERROR ALERTS & RETRY
+========================================= */
+
+.ai-error-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 18px;
+    border-radius: 12px;
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+    font-size: 13.5px;
+    margin: 6px 0;
+}
+
+.ai-error-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.ai-retry-btn {
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.ai-retry-btn:hover {
+    background: rgba(239, 68, 68, 0.35);
+}
+
+/* Allowance Exhausted Banner */
+.ai-exhausted-banner {
+    margin: 0 20px 14px;
+    padding: 14px 18px;
+    border-radius: 14px;
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    color: #fca5a5;
+    font-size: 13.5px;
+    line-height: 1.5;
+    backdrop-filter: blur(12px);
+}
+
+.ai-exhausted-banner strong {
+    color: #fee2e2;
+    display: block;
+    margin-bottom: 2px;
+}
+
+/* =========================================
+   MESSAGE COMPOSER
+========================================= */
+
+.ai-composer-wrapper {
+    padding: 16px 24px 20px;
+    background: rgba(14, 23, 17, 0.6);
+    border-top: 1px solid var(--card-border);
+    backdrop-filter: blur(16px);
+    flex-shrink: 0;
+}
+
+.ai-composer-box {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 16px;
+    padding: 8px 10px 8px 16px;
+    transition: all 0.2s ease;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.ai-composer-box:focus-within {
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ai-composer-box.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.ai-composer-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-size: 14.5px;
+    font-family: inherit;
+    line-height: 1.5;
+    resize: none;
+    max-height: 140px;
+    min-height: 24px;
+    padding: 4px 0;
+}
+
+.ai-composer-input::placeholder {
+    color: var(--text-secondary);
+}
+
+.ai-send-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.ai-send-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+}
+
+.ai-send-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.ai-composer-hints {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 6px 0;
+    font-size: 11.5px;
+    color: var(--text-secondary);
+}
+
+/* =========================================
+   RESPONSIVE DESIGN (TABLET & MOBILE)
+========================================= */
+
+@media (max-width: 900px) {
+    .ai-assistant-page {
+        height: calc(100vh - 100px);
+        border-radius: 18px;
+    }
+
+    .ai-header {
+        padding: 14px 16px;
+    }
+
+    .ai-token-pill {
+        padding: 4px 10px;
+        font-size: 12px;
+    }
+
+    .ai-composer-wrapper {
+        padding: 12px 16px 16px;
+    }
+
+    .ai-suggestions-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .ai-assistant-page {
+        height: calc(100vh - 90px);
+        border-radius: 12px;
+    }
+
+    .ai-header-titles h1 {
+        font-size: 17px;
+    }
+
+    .ai-header-titles p {
+        display: none;
+    }
+
+    .ai-message-bubble {
+        max-width: 88%;
+        padding: 12px 14px;
+        font-size: 13.5px;
+    }
+
+    .ai-welcome-box {
+        padding: 20px 14px;
+    }
+
+    .ai-welcome-box h2 {
+        font-size: 18px;
+    }
+
+    .ai-composer-hints {
+        display: none;
+    }
+}

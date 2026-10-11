@@ -1,0 +1,694 @@
+/* ==========================================================================
+   EXPENSEFLOW — FULL-WIDTH SETTINGS & SECURITY ARCHITECTURE
+   Emerald • Mint • Dark Glassmorphism • Balanced Two-Column Desktop Grid
+   ========================================================================== */
+
+/* Main Settings Page Container — Full Width Beside Sidebar */
+.settings-page {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    box-sizing: border-box;
+    animation: settingsFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes settingsFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Page Header */
+.settings-header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.settings-header .page-title {
+    font-size: 26px;
+    font-weight: 750;
+    letter-spacing: -0.025em;
+    color: var(--text-primary);
+}
+
+.settings-header .page-subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* Responsive Two-Column Settings Grid on Desktop */
+.settings-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 24px;
+    width: 100%;
+    min-width: 0;
+    align-items: start;
+}
+
+/* Glass Card Base Styles */
+.settings-security-card,
+.settings-regional-card {
+    width: 100%;
+    min-width: 0;
+    padding: 30px;
+    border-radius: 20px;
+    background: var(--card-bg, rgba(255, 255, 255, 0.72));
+    border: 1px solid var(--card-border, rgba(0, 0, 0, 0.08));
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    box-sizing: border-box;
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+[data-theme="dark"] .settings-security-card,
+[data-theme="dark"] .settings-regional-card {
+    background: rgba(18, 28, 21, 0.78);
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* Card Header */
+.settings-card-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.settings-icon-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: rgba(46, 125, 50, 0.1);
+    color: var(--accent-green, #2e7d32);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+[data-theme="dark"] .settings-icon-circle {
+    background: rgba(89, 202, 120, 0.14);
+    color: #72db90;
+}
+
+.settings-card-title {
+    font-size: 18.5px;
+    font-weight: 750;
+    color: var(--text-primary);
+    letter-spacing: -0.015em;
+    margin-bottom: 3px;
+}
+
+.settings-card-subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* Security Notice Pill Strip */
+.security-notice-strip {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 13px 16px;
+    border-radius: 12px;
+    background: rgba(46, 125, 50, 0.06);
+    border: 1px solid rgba(46, 125, 50, 0.16);
+}
+
+[data-theme="dark"] .security-notice-strip {
+    background: rgba(89, 202, 120, 0.08);
+    border-color: rgba(89, 202, 120, 0.2);
+}
+
+.notice-icon {
+    color: var(--accent-green, #2e7d32);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+[data-theme="dark"] .notice-icon {
+    color: #72db90;
+}
+
+.notice-text {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* Notifications */
+.settings-alert-success {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background: rgba(46, 125, 50, 0.12);
+    border: 1px solid rgba(46, 125, 50, 0.28);
+    color: #2e7d32;
+    font-size: 13.5px;
+    font-weight: 550;
+    line-height: 1.45;
+}
+
+[data-theme="dark"] .settings-alert-success {
+    background: rgba(89, 202, 120, 0.14);
+    border-color: rgba(89, 202, 120, 0.35);
+    color: #8ce3a0;
+}
+
+.settings-alert-error {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background: rgba(220, 53, 69, 0.1);
+    border: 1px solid rgba(220, 53, 69, 0.25);
+    color: #dc3545;
+    font-size: 13.5px;
+    font-weight: 550;
+    line-height: 1.45;
+}
+
+[data-theme="dark"] .settings-alert-error {
+    background: rgba(239, 83, 80, 0.14);
+    border-color: rgba(239, 83, 80, 0.35);
+    color: #ff8a80;
+}
+
+.alert-icon {
+    flex-shrink: 0;
+}
+
+/* Form Layout */
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.form-label {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+}
+
+/* Input Architecture */
+.input-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.settings-input {
+    width: 100%;
+    height: 48px;
+    padding: 0 46px 0 16px;
+    border-radius: 12px;
+    background: var(--input-bg, rgba(0, 0, 0, 0.03));
+    border: 1px solid var(--input-border, rgba(0, 0, 0, 0.12));
+    color: var(--text-primary);
+    font-size: 14.5px;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    outline: none;
+}
+
+[data-theme="dark"] .settings-input {
+    background: rgba(14, 22, 17, 0.85);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #f0f7f2;
+}
+
+.settings-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+.settings-input:focus {
+    border-color: var(--accent-green, #2e7d32);
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.18);
+    background: var(--card-bg, #ffffff);
+}
+
+[data-theme="dark"] .settings-input:focus {
+    border-color: #59ca78;
+    box-shadow: 0 0 0 3px rgba(89, 202, 120, 0.22);
+    background: rgba(18, 28, 21, 0.95);
+}
+
+/* Maintain dark glassmorphism styling on browser autofill */
+.settings-input:-webkit-autofill,
+.settings-input:-webkit-autofill:hover,
+.settings-input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--text-primary);
+    -webkit-box-shadow: 0 0 0px 1000px rgba(18, 28, 21, 0.92) inset;
+    box-shadow: 0 0 0px 1000px rgba(18, 28, 21, 0.92) inset;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.settings-input.input-error {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15);
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+.password-toggle-btn:hover {
+    color: var(--accent-green, #2e7d32);
+    background: rgba(46, 125, 50, 0.08);
+}
+
+[data-theme="dark"] .password-toggle-btn:hover {
+    color: #72db90;
+    background: rgba(89, 202, 120, 0.12);
+}
+
+.field-error-text {
+    font-size: 12px;
+    font-weight: 500;
+    color: #dc3545;
+    margin-top: 2px;
+}
+
+[data-theme="dark"] .field-error-text {
+    color: #ef5350;
+}
+
+/* Password Strength Meter */
+.password-strength-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.strength-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.strength-title {
+    font-size: 11.5px;
+    font-weight: 550;
+    color: var(--text-secondary);
+}
+
+.strength-badge {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 2px 8px;
+    border-radius: 980px;
+}
+
+.strength-badge.strength-weak {
+    color: #ef5350;
+    background: rgba(239, 83, 80, 0.12);
+}
+
+.strength-badge.strength-fair {
+    color: #ffa726;
+    background: rgba(255, 167, 38, 0.12);
+}
+
+.strength-badge.strength-good {
+    color: #66bb6a;
+    background: rgba(102, 187, 106, 0.12);
+}
+
+.strength-badge.strength-strong {
+    color: #2e7d32;
+    background: rgba(46, 125, 50, 0.14);
+}
+
+[data-theme="dark"] .strength-badge.strength-strong {
+    color: #72db90;
+    background: rgba(89, 202, 120, 0.16);
+}
+
+.strength-meter-bar {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+}
+
+.strength-segment {
+    height: 4px;
+    flex: 1;
+    border-radius: 980px;
+    background: rgba(0, 0, 0, 0.08);
+    transition: background 0.3s ease;
+}
+
+[data-theme="dark"] .strength-segment {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.strength-segment.strength-weak {
+    background: #ef5350;
+}
+
+.strength-segment.strength-fair {
+    background: #ffa726;
+}
+
+.strength-segment.strength-good {
+    background: #66bb6a;
+}
+
+.strength-segment.strength-strong {
+    background: #2e7d32;
+}
+
+[data-theme="dark"] .strength-segment.strength-strong {
+    background: #72db90;
+}
+
+/* Requirements Checklist Box */
+.password-checklist-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px 18px;
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid var(--card-border, rgba(0, 0, 0, 0.06));
+    margin-top: 4px;
+}
+
+[data-theme="dark"] .password-checklist-box {
+    background: rgba(255, 255, 255, 0.02);
+    border-color: rgba(255, 255, 255, 0.06);
+}
+
+.checklist-heading {
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+}
+
+.checklist-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 18px;
+}
+
+@media (max-width: 600px) {
+    .checklist-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    transition: color 0.2s ease;
+}
+
+.checklist-item .dot-icon {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-secondary);
+    opacity: 0.4;
+    margin: 4px;
+}
+
+.checklist-item .check-icon {
+    color: var(--accent-green, #2e7d32);
+    flex-shrink: 0;
+}
+
+[data-theme="dark"] .checklist-item .check-icon {
+    color: #72db90;
+}
+
+.checklist-item.met {
+    color: var(--text-primary);
+    font-weight: 550;
+}
+
+/* Submit Button & Actions */
+.form-actions {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.btn-update-password {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 48px;
+    padding: 0 32px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #2e7d32, #388e3c);
+    color: #ffffff;
+    font-size: 14.5px;
+    font-weight: 650;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(46, 125, 50, 0.28);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-update-password:hover:not(:disabled) {
+    background: linear-gradient(135deg, #256629, #2e7d32);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(46, 125, 50, 0.38);
+}
+
+.btn-update-password:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Regional & Currency Standards Card (Column 2) */
+.regional-settings-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.settings-preference-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--card-border, rgba(0, 0, 0, 0.06));
+    gap: 16px;
+}
+
+.settings-preference-row:first-child {
+    padding-top: 0;
+}
+
+.settings-preference-row:last-child {
+    border-bottom: none;
+}
+
+[data-theme="dark"] .settings-preference-row {
+    border-color: rgba(255, 255, 255, 0.06);
+}
+
+.preference-text-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.preference-text-wrap strong {
+    font-size: 14px;
+    color: var(--text-primary);
+    font-weight: 650;
+}
+
+.preference-text-wrap span {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.pref-badge {
+    padding: 6px 14px;
+    border-radius: 980px;
+    background: rgba(46, 125, 50, 0.1);
+    color: var(--accent-green, #2e7d32);
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+[data-theme="dark"] .pref-badge {
+    background: rgba(89, 202, 120, 0.14);
+    color: #72db90;
+}
+
+.pref-badge.active-badge {
+    background: rgba(46, 125, 50, 0.16);
+    color: #2e7d32;
+    border: 1px solid rgba(46, 125, 50, 0.25);
+}
+
+[data-theme="dark"] .pref-badge.active-badge {
+    background: rgba(89, 202, 120, 0.18);
+    color: #8ce3a0;
+    border-color: rgba(89, 202, 120, 0.3);
+}
+
+/* Active Session & Sign Out Footer */
+.settings-footer-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 4px;
+    padding-top: 20px;
+    border-top: 1px solid var(--card-border, rgba(0, 0, 0, 0.06));
+    flex-wrap: wrap;
+}
+
+[data-theme="dark"] .settings-footer-actions {
+    border-color: rgba(255, 255, 255, 0.06);
+}
+
+.signout-info-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.signout-info-title {
+    font-size: 13.5px;
+    font-weight: 650;
+    color: var(--text-primary);
+}
+
+.signout-info-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.btn-logout-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 12px;
+    background: rgba(220, 53, 69, 0.08);
+    border: 1px solid rgba(220, 53, 69, 0.2);
+    color: #dc3545;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.btn-logout-danger:hover {
+    background: rgba(220, 53, 69, 0.16);
+    transform: translateY(-1px);
+}
+
+[data-theme="dark"] .btn-logout-danger {
+    background: rgba(239, 83, 80, 0.1);
+    border-color: rgba(239, 83, 80, 0.25);
+    color: #ff8a80;
+}
+
+[data-theme="dark"] .btn-logout-danger:hover {
+    background: rgba(239, 83, 80, 0.2);
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1100px) {
+    .settings-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .settings-security-card,
+    .settings-regional-card {
+        padding: 22px 18px;
+        border-radius: 16px;
+    }
+
+    .form-actions {
+        width: 100%;
+    }
+
+    .btn-update-password {
+        width: 100%;
+    }
+
+    .settings-footer-actions {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .btn-logout-danger {
+        width: 100%;
+        justify-content: center;
+    }
+}

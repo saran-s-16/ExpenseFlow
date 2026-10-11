@@ -1,0 +1,588 @@
+/* =========================================
+   DESIGN TOKENS & CSS VARIABLES
+========================================= */
+
+:root {
+    --bg-primary: #f4faf5;
+    --bg-secondary: #e8f5ec;
+    --card-bg: rgba(255, 255, 255, 0.68);
+    --card-border: rgba(255, 255, 255, 0.88);
+    --text-primary: #151915;
+    --text-secondary: #6e7a71;
+    --accent-green: #3d9d52;
+    --accent-green-light: #70c482;
+    --accent-green-glow: rgba(61, 157, 82, 0.2);
+    --input-bg: rgba(255, 255, 255, 0.75);
+    --input-border: #dde8df;
+    --input-focus-bg: #ffffff;
+    --tag-bg: #edf6ee;
+    --tag-text: #2f8440;
+    --shadow-glass: 0 18px 45px rgba(50, 105, 60, 0.08);
+}
+
+[data-theme="dark"],
+body.dark-theme {
+    --bg-primary: #0e1511;
+    --bg-secondary: #141f18;
+    --card-bg: rgba(24, 34, 27, 0.75);
+    --card-border: rgba(255, 255, 255, 0.09);
+    --text-primary: #f0f7f2;
+    --text-secondary: #9cb1a2;
+    --accent-green: #59ca78;
+    --accent-green-light: #80db9a;
+    --accent-green-glow: rgba(89, 202, 120, 0.25);
+    --input-bg: rgba(18, 26, 21, 0.85);
+    --input-border: rgba(255, 255, 255, 0.12);
+    --input-focus-bg: rgba(26, 38, 30, 0.95);
+    --tag-bg: rgba(89, 202, 120, 0.15);
+    --tag-text: #72db90;
+    --shadow-glass: 0 18px 45px rgba(0, 0, 0, 0.35);
+}
+
+/* =========================================
+   RESET & BASE STYLES
+========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button {
+    font: inherit;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background: transparent;
+}
+
+input,
+select,
+textarea {
+    font: inherit;
+    outline: none;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* =========================================
+   SCROLLBAR
+========================================= */
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-green-light);
+    border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-green);
+}
+
+/* =========================================
+   UNIVERSAL FORM CONTROLS & INPUT SYSTEM
+========================================= */
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    width: 100%;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+}
+
+.form-input {
+    width: 100%;
+    height: 46px;
+    padding: 0 14px;
+    border-radius: 12px;
+    background-color: var(--input-bg, rgba(255, 255, 255, 0.75));
+    border: 1px solid var(--input-border, #dde8df);
+    color: var(--text-primary);
+    font-size: 13.5px;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    outline: none;
+}
+
+[data-theme="dark"] .form-input,
+body.dark-theme .form-input {
+    background-color: rgba(16, 26, 20, 0.85);
+    border-color: rgba(89, 202, 120, 0.22);
+    color: #f0f7f2;
+}
+
+.form-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.65;
+}
+
+.form-input:focus {
+    border-color: var(--accent-green, #3d9d52);
+    box-shadow: 0 0 0 3px rgba(85, 173, 105, 0.22);
+    background-color: var(--input-focus-bg, #ffffff);
+}
+
+[data-theme="dark"] .form-input:focus,
+body.dark-theme .form-input:focus {
+    border-color: #59ca78;
+    box-shadow: 0 0 0 3px rgba(89, 202, 120, 0.28);
+    background-color: rgba(20, 32, 24, 0.95);
+}
+
+/* Select styling — exactly ONE clean chevron at the far right edge */
+select.form-input,
+.modal-form select,
+.modal-card select {
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: 42px !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236e7a71' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat !important;
+    background-position: right 14px center !important;
+    background-size: 16px 16px !important;
+}
+
+select.form-input::-ms-expand,
+.modal-form select::-ms-expand,
+.modal-card select::-ms-expand {
+    display: none;
+}
+
+[data-theme="dark"] select.form-input,
+body.dark-theme select.form-input,
+[data-theme="dark"] .modal-form select,
+body.dark-theme .modal-form select,
+[data-theme="dark"] .modal-card select,
+body.dark-theme .modal-card select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2380db9a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat !important;
+    background-position: right 14px center !important;
+    background-size: 16px 16px !important;
+}
+
+select.form-input:focus,
+[data-theme="dark"] select.form-input:focus,
+body.dark-theme select.form-input:focus,
+.modal-form select:focus,
+[data-theme="dark"] .modal-form select:focus,
+body.dark-theme .modal-form select:focus {
+    background-repeat: no-repeat !important;
+    background-position: right 14px center !important;
+    background-size: 16px 16px !important;
+}
+
+select.form-input option {
+    background-color: #ffffff;
+    color: #151915;
+}
+
+[data-theme="dark"] select.form-input option,
+body.dark-theme select.form-input option {
+    background-color: #141f18;
+    color: #f0f7f2;
+}
+
+/* Date input styling */
+input[type="date"].form-input {
+    cursor: pointer;
+    color-scheme: light;
+}
+
+[data-theme="dark"] input[type="date"].form-input,
+body.dark-theme input[type="date"].form-input {
+    color-scheme: dark;
+}
+
+[data-theme="dark"] input[type="date"].form-input::-webkit-calendar-picker-indicator,
+body.dark-theme input[type="date"].form-input::-webkit-calendar-picker-indicator {
+    filter: invert(0.85) hue-rotate(90deg) brightness(1.15);
+    cursor: pointer;
+}
+
+/* Prevent white browser autofill */
+.form-input:-webkit-autofill,
+.form-input:-webkit-autofill:hover,
+.form-input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--text-primary);
+    -webkit-box-shadow: 0 0 0px 1000px rgba(18, 28, 21, 0.95) inset;
+    box-shadow: 0 0 0px 1000px rgba(18, 28, 21, 0.95) inset;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* =========================================
+   UNIVERSAL MODAL DIALOG SYSTEM
+   (Centered in viewport, dark emerald glassmorphism, internal scrolling)
+========================================= */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 14, 10, 0.72);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1100;
+    animation: modalOverlayFadeIn 0.2s ease-out;
+    overflow: hidden;
+}
+
+@keyframes modalOverlayFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-card {
+    width: min(500px, 100%);
+    max-height: calc(100vh - 40px);
+    display: flex;
+    flex-direction: column;
+    border-radius: 24px;
+    background: var(--card-bg, #ffffff);
+    border: 1px solid var(--card-border, rgba(255, 255, 255, 0.95));
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+    animation: modalScaleFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+    position: relative;
+}
+
+@keyframes modalScaleFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+[data-theme="dark"] .modal-card,
+body.dark-theme .modal-card {
+    background: rgba(18, 28, 21, 0.96);
+    border: 1px solid rgba(89, 202, 120, 0.22);
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(89, 202, 120, 0.12);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 28px 16px;
+    flex-shrink: 0;
+}
+
+.modal-header h3 {
+    font-size: 19px;
+    font-weight: 750;
+    color: var(--text-primary, #151915);
+    margin: 0;
+}
+
+.modal-close-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-secondary, #666);
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.modal-close-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .modal-close-btn,
+body.dark-theme .modal-close-btn {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .modal-close-btn:hover,
+body.dark-theme .modal-close-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #f0f7f2;
+}
+
+/* Modal Form with scrollable body */
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    width: 100%;
+}
+
+.modal-body-scrollable {
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 4px 28px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 0;
+}
+
+.modal-body-scrollable::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-body-scrollable::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modal-body-scrollable::-webkit-scrollbar-thumb {
+    background: rgba(89, 202, 120, 0.2);
+    border-radius: 10px;
+}
+
+.modal-body-scrollable::-webkit-scrollbar-thumb:hover {
+    background: rgba(89, 202, 120, 0.4);
+}
+
+/* Modal Action Buttons (Fixed Footer) */
+.modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 28px 24px;
+    flex-shrink: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    margin-top: 0;
+}
+
+[data-theme="dark"] .modal-actions,
+body.dark-theme .modal-actions {
+    border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.btn-cancel {
+    padding: 11px 18px;
+    border-radius: 11px;
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--text-primary, #444);
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-cancel:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .btn-cancel,
+body.dark-theme .btn-cancel {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .btn-cancel:hover,
+body.dark-theme .btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--text-primary);
+}
+
+.btn-submit {
+    padding: 11px 22px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #6ec481, #4ba35e);
+    color: white;
+    font-size: 13.5px;
+    font-weight: 650;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(75, 163, 94, 0.25);
+    transition: 0.2s;
+}
+
+.btn-submit:hover:not(:disabled) {
+    box-shadow: 0 10px 22px rgba(75, 163, 94, 0.35);
+    transform: translateY(-1px);
+}
+
+.btn-submit:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.btn-delete-confirm {
+    padding: 11px 20px;
+    border-radius: 11px;
+    background: #d64545;
+    color: white;
+    font-size: 13px;
+    font-weight: 650;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-delete-confirm:hover:not(:disabled) {
+    background: #c53030;
+}
+
+/* Type Toggle Buttons (Expense / Income) */
+.type-toggle-group {
+    display: flex;
+    background: rgba(0, 0, 0, 0.05);
+    padding: 4px;
+    border-radius: 12px;
+    gap: 4px;
+    width: 100%;
+}
+
+[data-theme="dark"] .type-toggle-group,
+body.dark-theme .type-toggle-group {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.type-toggle-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 650;
+    color: var(--text-secondary, #666);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+[data-theme="dark"] .type-toggle-btn,
+body.dark-theme .type-toggle-btn {
+    color: var(--text-secondary);
+}
+
+.type-toggle-btn.active-expense {
+    background: #fdeeee;
+    color: #c44040;
+    box-shadow: 0 4px 10px rgba(196, 64, 64, 0.15);
+}
+
+[data-theme="dark"] .type-toggle-btn.active-expense,
+body.dark-theme .type-toggle-btn.active-expense {
+    background: rgba(239, 83, 80, 0.2);
+    color: #ff8a80;
+    border: 1px solid rgba(239, 83, 80, 0.35);
+    box-shadow: 0 4px 12px rgba(239, 83, 80, 0.15);
+}
+
+.type-toggle-btn.active-income {
+    background: #e1f7e6;
+    color: #2e8b43;
+    box-shadow: 0 4px 10px rgba(46, 139, 67, 0.15);
+}
+
+[data-theme="dark"] .type-toggle-btn.active-income,
+body.dark-theme .type-toggle-btn.active-income {
+    background: rgba(89, 202, 120, 0.2);
+    color: #8ce3a0;
+    border: 1px solid rgba(89, 202, 120, 0.35);
+    box-shadow: 0 4px 12px rgba(89, 202, 120, 0.15);
+}
+
+.form-row {
+    display: flex;
+    gap: 14px;
+    width: 100%;
+}
+
+.modal-error-alert {
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: rgba(239, 83, 80, 0.12);
+    color: #e53935;
+    border: 1px solid rgba(239, 83, 80, 0.3);
+    font-size: 13px;
+    margin: 0 28px 12px;
+}
+
+[data-theme="dark"] .modal-error-alert,
+body.dark-theme .modal-error-alert {
+    background: rgba(239, 83, 80, 0.18);
+    color: #ff8a80;
+    border-color: rgba(239, 83, 80, 0.35);
+}
+
+/* Modals without scrollable body (e.g. Delete, Detail) */
+.modal-card:not(:has(.modal-body-scrollable)) {
+    padding: 28px;
+    overflow-y: auto;
+}
+
+.modal-card:not(:has(.modal-body-scrollable)) .modal-header {
+    padding: 0 0 16px;
+}
+
+.modal-card:not(:has(.modal-body-scrollable)) .modal-actions {
+    padding: 20px 0 0;
+    border-top: none;
+}

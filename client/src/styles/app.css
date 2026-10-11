@@ -1,0 +1,116 @@
+.app {
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 24px;
+
+    background:
+        radial-gradient(circle at top left,
+            rgba(150, 220, 165, 0.35),
+            transparent 35%),
+        radial-gradient(circle at bottom right,
+            rgba(190, 235, 200, 0.35),
+            transparent 35%),
+        #f4faf5;
+}
+
+.welcome-card {
+    width: min(480px, 100%);
+
+    padding: 55px 45px;
+
+    text-align: center;
+
+    background: rgba(255, 255, 255, 0.65);
+
+    border: 1px solid rgba(255, 255, 255, 0.8);
+
+    border-radius: 32px;
+
+    box-shadow:
+        0 25px 70px rgba(56, 110, 65, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.logo-circle {
+    width: 72px;
+    height: 72px;
+
+    margin: 0 auto 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: linear-gradient(145deg,
+            #b9e8c1,
+            #78c88a);
+
+    color: white;
+
+    font-size: 30px;
+    font-weight: 700;
+
+    box-shadow:
+        0 12px 30px rgba(71, 167, 89, 0.25),
+        inset 0 2px 4px rgba(255, 255, 255, 0.6);
+}
+
+.welcome-card h1 {
+    margin-bottom: 12px;
+
+    font-size: 38px;
+    font-weight: 750;
+
+    letter-spacing: -1.5px;
+}
+
+.welcome-card p {
+    margin-bottom: 30px;
+
+    color: #647067;
+
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.start-button {
+    padding: 14px 28px;
+
+    border-radius: 14px;
+
+    background: linear-gradient(135deg,
+            #79c98a,
+            #55ad69);
+
+    color: white;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    box-shadow:
+        0 10px 25px rgba(75, 170, 91, 0.25);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.start-button:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 14px 30px rgba(75, 170, 91, 0.35);
+}
+
+.start-button:active {
+    transform: translateY(0);
+}

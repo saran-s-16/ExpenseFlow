@@ -1,0 +1,61 @@
+# ===================================================
+# ExpenseFlow .gitignore
+# ===================================================
+
+# Environment variables and secrets
+.env
+.env*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+*.env
+*.pem
+*.key
+*.cert
+
+# Allow safe environment template files to be tracked
+!.env.example
+!.env.template
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Production build outputs
+dist/
+client/dist/
+server/dist/
+build/
+dist-ssr/
+*.local
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# Test coverage & reports
+coverage/
+.nyc_output/
+
+# IDE, Editor, and OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Temporary and scratch files
+scratch/

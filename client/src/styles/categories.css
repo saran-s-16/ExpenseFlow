@@ -1,0 +1,158 @@
+/* =========================================
+   CATEGORIES PAGE STYLES
+========================================= */
+
+.categories-page {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.cat-header-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.cat-tabs-bar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.cat-tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 12px 22px;
+    border-radius: 14px;
+    background: var(--card-bg, rgba(255, 255, 255, 0.65));
+    border: 1px solid var(--card-border, rgba(255, 255, 255, 0.85));
+    color: var(--text-secondary, #667268);
+    font-size: 13.5px;
+    font-weight: 650;
+    transition: all 0.2s ease;
+}
+
+.cat-tab-btn:hover {
+    color: var(--text-primary, #151915);
+    transform: translateY(-2px);
+}
+
+.cat-tab-btn.active {
+    background: linear-gradient(135deg, rgba(126, 202, 140, 0.3), rgba(190, 232, 197, 0.2));
+    color: #2b7a3d;
+    border-color: rgba(121, 201, 138, 0.4);
+    box-shadow: 0 8px 20px rgba(50, 105, 60, 0.08);
+}
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 18px;
+}
+
+.cat-card {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 45px rgba(50, 105, 60, 0.12);
+}
+
+.cat-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cat-avatar-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: rgba(140, 215, 155, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.cat-card-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.cat-card-body h3 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary, #151915);
+    margin-bottom: 6px;
+}
+
+.cat-type-pill {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 6px;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.pill-expense {
+    background: #fdeeee;
+    color: #c44040;
+}
+
+.pill-income {
+    background: #e1f7e6;
+    color: #2e8b43;
+}
+
+.cat-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid var(--card-border, #edf2ee);
+}
+
+.cat-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.cat-stat span {
+    font-size: 11px;
+    color: var(--text-secondary, #8a948c);
+}
+
+.cat-stat strong {
+    font-size: 13.5px;
+    color: var(--text-primary, #222);
+}
+
+.cat-empty-card {
+    grid-column: 1 / -1;
+    padding: 50px 20px;
+    text-align: center;
+    color: var(--text-secondary, #78827b);
+}
+
+.cat-empty-card h3 {
+    color: var(--text-primary, #151915);
+    margin-bottom: 6px;
+}
+
+.cat-empty-card p {
+    font-size: 14px;
+    max-width: 400px;
+    margin: 0 auto 20px;
+}
