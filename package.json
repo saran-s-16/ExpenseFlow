@@ -1,23 +1,17 @@
 {
-    "name": "expense-tracker-client",
-    "private": true,
+    "name": "expenseflow",
     "version": "1.0.0",
+    "private": true,
     "type": "module",
     "scripts": {
-        "dev": "vite",
-        "build": "vite build",
-        "preview": "vite preview"
+        "install:server": "npm --prefix server install",
+        "install:client": "npm --prefix client install",
+        "build": "npm --prefix server install",
+        "start": "node server/server.js",
+        "dev:server": "npm --prefix server run dev",
+        "dev:client": "npm --prefix client run dev"
     },
-    "dependencies": {
-        "axios": "^1.8.4",
-        "lucide-react": "^0.468.0",
-        "react": "^19.0.0",
-        "react-dom": "^19.0.0",
-        "react-router-dom": "^7.1.5",
-        "recharts": "^2.15.0"
-    },
-    "devDependencies": {
-        "@vitejs/plugin-react": "^4.4.1",
-        "vite": "^6.1.0"
+    "engines": {
+        "node": ">=18.0.0"
     }
 }
