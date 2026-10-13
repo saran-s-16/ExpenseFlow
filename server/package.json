@@ -6,7 +6,11 @@
     "scripts": {
         "dev": "nodemon server.js",
         "start": "node server.js",
-        "db:init": "node scripts/initProductionDb.js"
+        "db:init": "node scripts/initProductionDb.js",
+        "db:seed:demo": "node scripts/seedDemoData.js",
+        "db:seed:dedicated-demo": "node scripts/seedDedicatedDemo.js",
+        "db:restore": "node scripts/restoreAll.js",
+        "test:verify": "node tests/verify_premium_upgrade.js"
     },
     "dependencies": {
         "bcryptjs": "^3.0.2",

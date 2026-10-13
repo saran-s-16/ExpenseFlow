@@ -1,12 +1,14 @@
 import axios from "axios";
 
-// Derive API base URL from Vite environment variable with local fallback
-const rawBaseUrl = (import.meta.env.VITE_API_URL || "http://localhost:5000").trim();
-const sanitizedBaseUrl = rawBaseUrl.replace(/\/+$/, "");
+// Derive API base URL from Vite environment variable with local fallback.
+// In local development, when VITE_API_URL is not set, use relative "/api"
+// which is forwarded by Vite's proxy to http://localhost:5000/api,
+// eliminating all CORS preflight and port-mismatch issues.
+const envUrl = (import.meta.env.VITE_API_URL || "").trim();
 
-export const API_BASE_URL = sanitizedBaseUrl.endsWith("/api")
-    ? sanitizedBaseUrl
-    : `${sanitizedBaseUrl}/api`;
+export const API_BASE_URL = envUrl
+    ? (envUrl.endsWith("/api") ? envUrl : `${envUrl.replace(/\/+$/, "")}/api`)
+    : "/api";
 
 const api = axios.create({
     baseURL: API_BASE_URL,

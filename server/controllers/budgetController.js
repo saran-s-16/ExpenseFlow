@@ -4,8 +4,17 @@ export async function getBudgets(req, res) {
     try {
         const userId = req.user.id;
         const now = new Date();
-        const month = parseInt(req.query.month, 10) || (now.getMonth() + 1);
-        const year = parseInt(req.query.year, 10) || now.getFullYear();
+        let month = req.query.month;
+        let year = req.query.year;
+
+        if (typeof month === "string" && month.includes("-")) {
+            const parts = month.split("-");
+            year = parseInt(parts[0], 10);
+            month = parseInt(parts[1], 10);
+        } else {
+            month = parseInt(month, 10) || (now.getMonth() + 1);
+            year = parseInt(year, 10) || now.getFullYear();
+        }
 
         // Retrieve budgets for this user, month, and year
         const budgetRes = await pool.query(

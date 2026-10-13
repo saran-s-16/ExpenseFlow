@@ -35,3 +35,6 @@ export function verifyToken(req, res, next) {
         });
     }
 }
+
+export { verifyToken as authenticate };
+export default verifyToken;

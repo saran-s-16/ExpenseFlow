@@ -42,6 +42,9 @@ const MIGRATION_FILES = [
     "004_create_ai_tables.sql",
     "005_create_daily_ai_usage.sql",
     "006_create_budgets.sql",
+    "007_create_savings_goals.sql",
+    "008_create_recurring_payments.sql",
+    "009_create_stock_tracker.sql",
 ];
 
 // Required tables that must exist after migrations
@@ -53,6 +56,10 @@ const REQUIRED_TABLES = [
     "user_ai_usage",
     "ai_chat_messages",
     "user_ai_daily_usage",
+    "savings_goals",
+    "recurring_payments",
+    "stock_watchlist",
+    "stock_transactions",
 ];
 
 async function run() {

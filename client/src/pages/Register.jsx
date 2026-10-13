@@ -79,11 +79,21 @@ export default function Register() {
                 },
             });
         } catch (err) {
-            setError(
-                err.response?.data?.message ||
-                err.message ||
-                "Failed to register. Please check your information."
-            );
+            if (!err.response) {
+                if (err.message === "Network Error" || err.code === "ERR_NETWORK") {
+                    setError(
+                        "Unable to connect to ExpenseFlow backend server. Please verify that the backend is running on http://localhost:5001."
+                    );
+                } else {
+                    setError(err.message || "Connection failed. Please check your network.");
+                }
+            } else if (err.response.status === 409) {
+                setError(err.response.data?.message || "An account with this email already exists.");
+            } else if (err.response.status >= 500) {
+                setError(err.response.data?.message || "Server error occurred during registration. Please try again.");
+            } else {
+                setError(err.response.data?.message || "Registration failed. Please check your information.");
+            }
         } finally {
             setSubmitting(false);
         }

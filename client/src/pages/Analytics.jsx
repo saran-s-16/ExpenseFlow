@@ -10,6 +10,8 @@ import {
     CheckCircle,
     Info,
     AlertCircle,
+    Layers,
+    Filter,
 } from "lucide-react";
 import {
     BarChart,
@@ -26,6 +28,7 @@ import {
     Area,
 } from "recharts";
 import { getAnalytics, downloadCsvExport } from "../services/analyticsService";
+import { getCategories } from "../services/categoryService";
 import { formatCurrency, getCategoryIcon } from "../utils/formatters";
 import "../styles/analytics.css";
 
@@ -40,20 +43,42 @@ const PIE_COLORS = [
     "#8b5cf6",
     "#3b82f6",
     "#14b8a6",
+    "#f43f5e",
+    "#06b6d4",
 ];
 
 export default function Analytics() {
-    const [range, setRange] = useState("last_6_months");
+    // Default to demo_month so the seeded month is immediately showcased
+    const [range, setRange] = useState("demo_month");
+    const [selectedCategory, setSelectedCategory] = useState("all");
+    const [selectedType, setSelectedType] = useState("all");
+    const [categories, setCategories] = useState([]);
+
     const [analytics, setAnalytics] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [exporting, setExporting] = useState(false);
 
+    // Fetch categories for filter dropdown
+    useEffect(() => {
+        getCategories()
+            .then((res) => {
+                if (res.success && res.categories) {
+                    setCategories(res.categories);
+                }
+            })
+            .catch((e) => console.error("Error loading categories:", e));
+    }, []);
+
     const loadAnalytics = useCallback(async () => {
         try {
             setLoading(true);
             setError("");
-            const res = await getAnalytics({ range });
+            const params = { range };
+            if (selectedCategory !== "all") params.category = selectedCategory;
+            if (selectedType !== "all") params.type = selectedType;
+
+            const res = await getAnalytics(params);
             if (res.success) {
                 setAnalytics(res);
             }
@@ -67,7 +92,7 @@ export default function Analytics() {
         } finally {
             setLoading(false);
         }
-    }, [range]);
+    }, [range, selectedCategory, selectedType]);
 
     useEffect(() => {
         loadAnalytics();
@@ -76,7 +101,10 @@ export default function Analytics() {
     const handleExport = async () => {
         try {
             setExporting(true);
-            await downloadCsvExport({ range });
+            const params = { range };
+            if (selectedCategory !== "all") params.category = selectedCategory;
+            if (selectedType !== "all") params.type = selectedType;
+            await downloadCsvExport(params);
         } catch (err) {
             alert(err.message || "Failed to download CSV export");
         } finally {
@@ -95,6 +123,8 @@ export default function Analytics() {
     };
     const categoryBreakdown = analytics?.categoryBreakdown || [];
     const monthlyTrends = analytics?.monthlyTrends || [];
+    const dailyTrends = analytics?.dailyTrends || [];
+    const weeklyTrends = analytics?.weeklyTrends || [];
     const paymentMethods = analytics?.paymentMethodBreakdown || [];
     const insights = analytics?.insights || [];
 
@@ -122,14 +152,20 @@ export default function Analytics() {
             {/* Header & Filter Controls */}
             <div className="analytics-header-strip">
                 <div>
-                    <h2 className="page-title">Analytics & Reports</h2>
+                    <h2 className="page-title">Interactive Analytics Center</h2>
                     <p className="page-subtitle">
-                        Deep visual insights into your spending patterns and savings rate
+                        Comprehensive multi-dimensional analysis derived directly from verified database records
                     </p>
                 </div>
 
-                <div className="analytics-controls">
-                    <div className="range-pills">
+                <div className="analytics-controls" style={{ flexWrap: "wrap", gap: "10px" }}>
+                    <div className="range-pills" style={{ flexWrap: "wrap" }}>
+                        <button
+                            className={`range-pill ${range === "demo_month" ? "active" : ""}`}
+                            onClick={() => setRange("demo_month")}
+                        >
+                            ⭐ September 2026 (Demo)
+                        </button>
                         <button
                             className={`range-pill ${range === "this_month" ? "active" : ""}`}
                             onClick={() => setRange("this_month")}
@@ -162,14 +198,98 @@ export default function Analytics() {
                         </button>
                     </div>
 
-                    <button
-                        className="btn-export-csv"
-                        onClick={handleExport}
-                        disabled={exporting}
-                    >
-                        <Download size={16} />
-                        <span>{exporting ? "Exporting..." : "Export CSV"}</span>
-                    </button>
+                    {/* Category & Type Dropdowns */}
+                    <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                        <select
+                            className="form-input"
+                            value={selectedCategory}
+                            onChange={(e) => setSelectedCategory(e.target.value)}
+                            style={{ height: "34px", fontSize: "12px", padding: "4px 10px", width: "130px" }}
+                        >
+                            <option value="all">All Categories</option>
+                            {categories.map((c) => (
+                                <option key={c.id || c.name} value={c.name}>
+                                    {c.name}
+                                </option>
+                            ))}
+                        </select>
+
+                        <select
+                            className="form-input"
+                            value={selectedType}
+                            onChange={(e) => setSelectedType(e.target.value)}
+                            style={{ height: "34px", fontSize: "12px", padding: "4px 10px", width: "110px" }}
+                        >
+                            <option value="all">All Types</option>
+                            <option value="expense">Expenses</option>
+                            <option value="income">Income</option>
+                        </select>
+
+                        <button
+                            className="btn-export-csv"
+                            onClick={handleExport}
+                            disabled={exporting}
+                            style={{ height: "34px", fontSize: "12px" }}
+                        >
+                            <Download size={14} />
+                            <span>{exporting ? "Exporting..." : "Export CSV"}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Presentation Summary Highlight Box */}
+            <div
+                style={{
+                    background: "rgba(16, 185, 129, 0.08)",
+                    border: "1px solid rgba(16, 185, 129, 0.25)",
+                    borderRadius: "14px",
+                    padding: "16px 22px",
+                    margin: "12px 0 24px",
+                    display: "flex",
+                    flexWrap: "wrap",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: "14px",
+                }}
+            >
+                <div>
+                    <span style={{ fontSize: "11px", fontWeight: 700, color: "#10b981", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                        🎓 College Presentation Snapshot • Indian Salaried Professional
+                    </span>
+                    <h3 style={{ fontSize: "17px", fontWeight: 700, marginTop: "2px" }}>
+                        {range === "demo_month" ? "September 2026 Complete Financial Profile" : "Selected Analytics Period"}
+                    </h3>
+                    <p style={{ fontSize: "13px", color: "var(--text-secondary)", margin: "4px 0 0" }}>
+                        Monthly Salary: <strong>₹70,000</strong> (+ ₹5,000 freelance) • 30 real PostgreSQL transactions recorded
+                    </p>
+                </div>
+
+                <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
+                    <div>
+                        <span style={{ fontSize: "11px", color: "var(--text-secondary)" }}>Period Income</span>
+                        <h4 style={{ fontSize: "17px", fontWeight: 700, color: "#10b981" }}>
+                            {formatCurrency(summary.totalIncome)}
+                        </h4>
+                    </div>
+                    <div>
+                        <span style={{ fontSize: "11px", color: "var(--text-secondary)" }}>Period Expenses</span>
+                        <h4 style={{ fontSize: "17px", fontWeight: 700, color: "#e27c7c" }}>
+                            {formatCurrency(summary.totalExpenses)}
+                        </h4>
+                    </div>
+                    <div>
+                        <span style={{ fontSize: "11px", color: "var(--text-secondary)" }}>Net Retained</span>
+                        <h4 style={{ fontSize: "17px", fontWeight: 700, color: summary.netSavings >= 0 ? "#10b981" : "#e27c7c" }}>
+                            {formatCurrency(summary.netSavings)}
+                        </h4>
+                    </div>
+                    <div>
+                        <span style={{ fontSize: "11px", color: "var(--text-secondary)" }}>Savings Rate</span>
+                        <h4 style={{ fontSize: "17px", fontWeight: 700, color: "#3d9d52" }}>
+                            {summary.savingsRate}%
+                        </h4>
+                    </div>
                 </div>
             </div>
 
@@ -183,27 +303,27 @@ export default function Analytics() {
             {/* Metrics Overview Cards */}
             <div className="metrics-grid">
                 <div className="glass-card metric-card">
-                    <span className="metric-title">Period Income</span>
+                    <span className="metric-title">Period Inflow</span>
                     <h3 className="metric-val" style={{ color: "#2e8b43" }}>
                         {formatCurrency(summary.totalIncome)}
                     </h3>
                     <span className="metric-sub">
-                        From {monthlyTrends.length} active period(s)
+                        From {summary.totalCount} recorded movements
                     </span>
                 </div>
 
                 <div className="glass-card metric-card">
-                    <span className="metric-title">Period Expenses</span>
+                    <span className="metric-title">Period Outflow</span>
                     <h3 className="metric-val" style={{ color: "#c44040" }}>
                         {formatCurrency(summary.totalExpenses)}
                     </h3>
                     <span className="metric-sub">
-                        {summary.totalCount} transaction(s) total
+                        Average: {formatCurrency(summary.avgExpense)} / transaction
                     </span>
                 </div>
 
                 <div className="glass-card metric-card">
-                    <span className="metric-title">Net Savings</span>
+                    <span className="metric-title">Net Capital Savings</span>
                     <h3
                         className="metric-val"
                         style={{
@@ -213,17 +333,17 @@ export default function Analytics() {
                         {formatCurrency(summary.netSavings)}
                     </h3>
                     <span className="metric-sub">
-                        Savings Rate: {summary.savingsRate}%
+                        Retained capital rate: <strong>{summary.savingsRate}%</strong>
                     </span>
                 </div>
 
                 <div className="glass-card metric-card">
-                    <span className="metric-title">Average Expense</span>
+                    <span className="metric-title">Highest Single Expense</span>
                     <h3 className="metric-val">
-                        {formatCurrency(summary.avgExpense)}
+                        {summary.highestExpense ? formatCurrency(summary.highestExpense.amount) : "₹0"}
                     </h3>
                     <span className="metric-sub">
-                        Per expense transaction
+                        {summary.highestExpense ? `"${summary.highestExpense.description}"` : "None"}
                     </span>
                 </div>
             </div>
@@ -248,29 +368,83 @@ export default function Analytics() {
                                 <span>{ins.text}</span>
                             </div>
                         ))}
-                        {summary.highestExpense && (
-                            <div className="insight-item">
-                                <Info size={16} color="#8b5cf6" />
-                                <span>
-                                    Highest single expense:{" "}
-                                    <strong>{formatCurrency(summary.highestExpense.amount)}</strong>{" "}
-                                    on {summary.highestExpense.category} ("
-                                    {summary.highestExpense.description}").
-                                </span>
-                            </div>
-                        )}
                     </div>
                 </div>
             )}
 
-            {/* Charts Row */}
-            <div className="analytics-charts-grid">
+            {/* Charts Row 1: Daily Expense Progression & Weekly Comparison */}
+            <div className="analytics-charts-grid" style={{ marginBottom: "24px" }}>
+                {/* Daily Expense Trend */}
+                <div className="glass-card chart-container-card">
+                    <div className="card-header">
+                        <div>
+                            <h3>Daily Spending Progression</h3>
+                            <p>Day-by-day expense outlays across the period</p>
+                        </div>
+                    </div>
+
+                    <div style={{ width: "100%", height: 300 }}>
+                        {dailyTrends.length === 0 ? (
+                            <div className="chart-empty-placeholder">
+                                No daily activity recorded for this period.
+                            </div>
+                        ) : (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart data={dailyTrends} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                                    <XAxis dataKey="date" stroke="var(--text-secondary)" fontSize={11} />
+                                    <YAxis
+                                        stroke="var(--text-secondary)"
+                                        fontSize={11}
+                                        tickFormatter={(val) => `₹${val}`}
+                                    />
+                                    <Tooltip content={<CustomTooltip />} />
+                                    <Bar dataKey="expense" name="Expense" fill="#e27c7c" radius={[4, 4, 0, 0]} />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        )}
+                    </div>
+                </div>
+
+                {/* Weekly Spending Comparison */}
+                <div className="glass-card chart-container-card">
+                    <div className="card-header">
+                        <div>
+                            <h3>Weekly Outlay Comparison</h3>
+                            <p>Aggregated weekly spending pace</p>
+                        </div>
+                    </div>
+
+                    <div style={{ width: "100%", height: 300 }}>
+                        {weeklyTrends.length === 0 ? (
+                            <div className="chart-empty-placeholder">
+                                No weekly data available.
+                            </div>
+                        ) : (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart data={weeklyTrends} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                                    <XAxis dataKey="week" stroke="var(--text-secondary)" fontSize={12} />
+                                    <YAxis
+                                        stroke="var(--text-secondary)"
+                                        fontSize={11}
+                                        tickFormatter={(val) => `₹${val}`}
+                                    />
+                                    <Tooltip content={<CustomTooltip />} />
+                                    <Bar dataKey="expense" name="Weekly Expense" fill="#55ad69" radius={[4, 4, 0, 0]} />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            {/* Charts Row 2: Monthly Trends & Category Distribution */}
+            <div className="analytics-charts-grid" style={{ marginBottom: "24px" }}>
                 {/* Monthly Income vs Expense Bar Chart */}
                 <div className="glass-card chart-container-card">
                     <div className="card-header">
                         <div>
                             <h3>Income vs. Expenses Over Time</h3>
-                            <p>Monthly financial balance progression</p>
+                            <p>Monthly balance progression</p>
                         </div>
                     </div>
 
@@ -287,11 +461,11 @@ export default function Analytics() {
                                 >
                                     <XAxis
                                         dataKey="month"
-                                        stroke="var(--text-secondary, #888)"
+                                        stroke="var(--text-secondary)"
                                         fontSize={12}
                                     />
                                     <YAxis
-                                        stroke="var(--text-secondary, #888)"
+                                        stroke="var(--text-secondary)"
                                         fontSize={11}
                                         tickFormatter={(val) => `₹${val >= 1000 ? `${(val / 1000).toFixed(0)}k` : val}`}
                                     />
@@ -319,7 +493,7 @@ export default function Analytics() {
                 <div className="glass-card chart-container-card">
                     <div className="card-header">
                         <div>
-                            <h3>Expense Distribution</h3>
+                            <h3>Category Spending Distribution</h3>
                             <p>Share of spending by category</p>
                         </div>
                     </div>
@@ -353,8 +527,8 @@ export default function Analytics() {
                                         formatter={(value) => [formatCurrency(value), "Amount"]}
                                     />
                                     <Legend
-                                        formatter={(value, entry) => (
-                                            <span style={{ fontSize: "12px" }}>
+                                        formatter={(value) => (
+                                            <span style={{ fontSize: "12px", color: "var(--text-primary)" }}>
                                                 {value}
                                             </span>
                                         )}
@@ -371,7 +545,7 @@ export default function Analytics() {
                 <div className="card-header">
                     <div>
                         <h3>Net Savings Trajectory</h3>
-                        <p>Net monthly retained capital (Income - Expenses)</p>
+                        <p>Monthly retained capital trajectory (Income - Expenses)</p>
                     </div>
                 </div>
 
@@ -394,11 +568,11 @@ export default function Analytics() {
                                 </defs>
                                 <XAxis
                                     dataKey="month"
-                                    stroke="var(--text-secondary, #888)"
+                                    stroke="var(--text-secondary)"
                                     fontSize={12}
                                 />
                                 <YAxis
-                                    stroke="var(--text-secondary, #888)"
+                                    stroke="var(--text-secondary)"
                                     fontSize={11}
                                     tickFormatter={(val) => `₹${val}`}
                                 />

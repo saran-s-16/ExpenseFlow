@@ -8,9 +8,14 @@
         "install:client": "npm --prefix client install",
         "build": "npm --prefix server install",
         "start": "node server/server.js",
-        "dev:server": "npm --prefix server run dev",
-        "dev:client": "npm --prefix client run dev",
-        "db:init": "npm --prefix server run db:init"
+        "dev": "npm run dev:client",
+        "dev:server": "npm run dev:server",
+        "dev:client": "npm run dev:client",
+        "db:init": "npm --prefix server run db:init",
+        "db:seed:demo": "npm --prefix server run db:seed:demo",
+        "db:seed:dedicated-demo": "npm --prefix server run db:seed:dedicated-demo",
+        "db:restore": "npm --prefix server run db:restore",
+        "test:verify": "npm --prefix server run test:verify"
     },
     "engines": {
         "node": ">=18.0.0"

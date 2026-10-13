@@ -65,7 +65,7 @@ Lifetime Totals:
 - Lifetime Balance / Savings: ₹${financialContext.lifetime?.balance?.toLocaleString("en-IN") || 0}
 - Total Transactions: ${financialContext.lifetime?.totalTransactions || 0}
 
-Current Month (${financialContext.currentMonth?.monthName || "This Month"}):
+Current Month (${financialContext.currentMonth?.monthName || "Active Month"}):
 - Income: ₹${financialContext.currentMonth?.income?.toLocaleString("en-IN") || 0}
 - Expenses: ₹${financialContext.currentMonth?.expenses?.toLocaleString("en-IN") || 0}
 - Net Savings: ₹${financialContext.currentMonth?.netSavings?.toLocaleString("en-IN") || 0}
@@ -78,7 +78,7 @@ Current Month (${financialContext.currentMonth?.monthName || "This Month"}):
             : "None"
     }
 
-Category Spending (Current Month):
+Category Spending (${financialContext.currentMonth?.monthName || "Active Period"}):
 ${
     financialContext.currentMonth?.categoryBreakdown?.length > 0
         ? financialContext.currentMonth.categoryBreakdown
@@ -87,10 +87,10 @@ ${
                       `- ${c.category}: ₹${c.amount.toLocaleString("en-IN")} (${c.percentageOfExpenses}% of expenses, ${c.count} transactions)`
               )
               .join("\n")
-        : "- No expenses in categories this month."
+        : "- No expenses in categories recorded."
 }
 
-Largest Expenses (Current Month):
+Largest Expenses (${financialContext.currentMonth?.monthName || "Active Period"}):
 ${
     financialContext.currentMonth?.largestExpenses?.length > 0
         ? financialContext.currentMonth.largestExpenses
@@ -102,40 +102,61 @@ ${
         : "- No large expenses recorded."
 }
 
-Previous Month Comparison:
-- Previous Month Income: ₹${financialContext.previousMonth?.income?.toLocaleString("en-IN") || 0}
-- Previous Month Expenses: ₹${financialContext.previousMonth?.expenses?.toLocaleString("en-IN") || 0}
-- Previous Month Net Savings: ₹${financialContext.previousMonth?.netSavings?.toLocaleString("en-IN") || 0}
-- Expense Difference: ₹${financialContext.previousMonth?.expenseDifference?.toLocaleString("en-IN") || 0} (${
-        (financialContext.previousMonth?.expenseDifference || 0) > 0 ? "higher this month" : "lower this month"
-    })
-
-Active Budgets (Current Month):
+Monthly Budgets Compliance (${financialContext.currentMonth?.monthName || "Active Period"}):
 ${
-    financialContext.budgets?.length > 0
-        ? financialContext.budgets
+    financialContext.currentMonth?.budgets?.length > 0
+        ? financialContext.currentMonth.budgets
               .map(
                   (b) =>
                       `- ${b.category}: Limit ₹${b.limit.toLocaleString("en-IN")} | Spent ₹${b.spent.toLocaleString(
                           "en-IN"
                       )} (${b.percentageUsed}% used) ${
-                          b.isExceeded ? "⚠️ EXCEEDED BUDGET" : "✓ Within Budget"
+                          b.isExceeded
+                              ? "⚠️ EXCEEDED BUDGET (Over limit!)"
+                              : b.percentageUsed >= 85
+                              ? "⚡ NEAR LIMIT (Warning)"
+                              : "✓ Within Budget"
                       }`
               )
               .join("\n")
-        : "- No active budgets configured for this month."
+        : "- No monthly budgets configured."
 }
 
-Recent Transactions:
+Exceeded Budget Categories:
 ${
-    financialContext.recentTransactions?.length > 0
-        ? financialContext.recentTransactions
+    financialContext.currentMonth?.exceededBudgets?.length > 0
+        ? financialContext.currentMonth.exceededBudgets
               .map(
-                  (t) =>
-                      `- [${t.type.toUpperCase()}] ₹${t.amount.toLocaleString("en-IN")} - "${t.description}" (${t.category}, ${t.date})`
+                  (b) =>
+                      `- ${b.category}: Spent ₹${b.spent.toLocaleString("en-IN")} against ₹${b.limit.toLocaleString("en-IN")} limit (Exceeded by ₹${(b.spent - b.limit).toLocaleString("en-IN")}, ${b.percentageUsed}% of limit)`
               )
               .join("\n")
-        : "- None"
+        : "- None! All categories within planned limits."
+}
+
+Savings Goals:
+${
+    financialContext.savingsGoals?.length > 0
+        ? financialContext.savingsGoals
+              .map(
+                  (g) =>
+                      `- "${g.name}": Saved ₹${g.currentAmount.toLocaleString("en-IN")} of ₹${g.targetAmount.toLocaleString("en-IN")} (${g.progress}% completed, Target: ${g.targetDate})`
+              )
+              .join("\n")
+        : "- No savings goals set."
+}
+
+Fixed Recurring Commitments:
+${
+    financialContext.recurringPayments?.length > 0
+        ? financialContext.recurringPayments
+              .map(
+                  (r) =>
+                      `- ${r.title}: ₹${r.amount.toLocaleString("en-IN")} (${r.frequency}, Next due: ${r.nextDueDate})`
+              )
+              .join("\n") +
+          `\nTotal Estimated Fixed Monthly Obligations: ₹${(financialContext.totalMonthlyRecurring || 0).toLocaleString("en-IN")}`
+        : "- No recurring commitments set."
 }
 
 SECURITY & ACCURACY GUIDELINES:

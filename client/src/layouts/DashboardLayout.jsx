@@ -8,7 +8,9 @@ import {
     BarChart3,
     Sparkles,
     Settings,
-
+    PiggyBank,
+    Repeat,
+    TrendingUp,
     LogOut,
     Sun,
     Moon,
@@ -119,6 +121,39 @@ export default function DashboardLayout() {
                     >
                         <Target size={19} />
                         <span>Budgets</span>
+                    </NavLink>
+
+                    <NavLink
+                        to="/savings-goals"
+                        className={({ isActive }) =>
+                            `nav-item ${isActive ? "active" : ""}`
+                        }
+                        onClick={() => setMobileOpen(false)}
+                    >
+                        <PiggyBank size={19} />
+                        <span>Savings Goals</span>
+                    </NavLink>
+
+                    <NavLink
+                        to="/recurring"
+                        className={({ isActive }) =>
+                            `nav-item ${isActive ? "active" : ""}`
+                        }
+                        onClick={() => setMobileOpen(false)}
+                    >
+                        <Repeat size={19} />
+                        <span>Recurring Bills</span>
+                    </NavLink>
+
+                    <NavLink
+                        to="/stocks"
+                        className={({ isActive }) =>
+                            `nav-item ${isActive ? "active" : ""}`
+                        }
+                        onClick={() => setMobileOpen(false)}
+                    >
+                        <TrendingUp size={19} />
+                        <span>Stock Market</span>
                     </NavLink>
 
                     <NavLink

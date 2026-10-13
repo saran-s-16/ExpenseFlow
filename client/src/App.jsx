@@ -14,6 +14,9 @@ import Categories from "./pages/Categories";
 import Analytics from "./pages/Analytics";
 import AiAssistant from "./pages/AiAssistant";
 import Settings from "./pages/Settings";
+import SavingsGoals from "./pages/SavingsGoals";
+import RecurringPayments from "./pages/RecurringPayments";
+import StockMarket from "./pages/StockMarket";
 import NotFound from "./pages/NotFound";
 
 
@@ -36,6 +39,10 @@ function App() {
                             <Route path="/expenses" element={<Transactions />} />
                             <Route path="/income" element={<Transactions />} />
                             <Route path="/budgets" element={<Budgets />} />
+                            <Route path="/savings-goals" element={<SavingsGoals />} />
+                            <Route path="/recurring" element={<RecurringPayments />} />
+                            <Route path="/stocks" element={<StockMarket />} />
+                            <Route path="/stock-market" element={<StockMarket />} />
                             <Route path="/categories" element={<Categories />} />
                             <Route path="/analytics" element={<Analytics />} />
                             <Route path="/ai-assistant" element={<AiAssistant />} />

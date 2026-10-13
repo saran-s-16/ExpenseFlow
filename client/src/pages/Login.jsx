@@ -61,11 +61,23 @@ export default function Login() {
             await login(email.trim(), password);
             navigate(from, { replace: true });
         } catch (err) {
-            setError(
-                err.response?.data?.message ||
-                err.message ||
-                "Invalid email or password. Please verify your credentials."
-            );
+            if (!err.response) {
+                if (err.message === "Network Error" || err.code === "ERR_NETWORK") {
+                    setError(
+                        "Unable to connect to ExpenseFlow backend server. Please verify that the backend is running on http://localhost:5001."
+                    );
+                } else {
+                    setError(err.message || "Connection failed. Please check your network.");
+                }
+            } else if (err.response.status === 401) {
+                setError(err.response.data?.message || "Invalid email or password. Please verify your credentials.");
+            } else if (err.response.status === 404) {
+                setError("Authentication endpoint not found. Please verify backend route configuration.");
+            } else if (err.response.status >= 500) {
+                setError(err.response.data?.message || "Server error occurred. Please try again later.");
+            } else {
+                setError(err.response.data?.message || "Login failed. Please verify your credentials.");
+            }
         } finally {
             setSubmitting(false);
         }

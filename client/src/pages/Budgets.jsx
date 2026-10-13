@@ -9,6 +9,8 @@ import {
     CheckCircle,
     X,
     TrendingUp,
+    ShieldAlert,
+    Coins,
 } from "lucide-react";
 import {
     getBudgets,
@@ -27,8 +29,9 @@ const MONTH_NAMES = [
 
 export default function Budgets() {
     const now = new Date();
-    const [selectedMonth, setSelectedMonth] = useState(now.getMonth() + 1);
-    const [selectedYear, setSelectedYear] = useState(now.getFullYear());
+    // Default to September 2026 (Demonstration Month)
+    const [selectedMonth, setSelectedMonth] = useState(9);
+    const [selectedYear, setSelectedYear] = useState(2026);
 
     const [budgetData, setBudgetData] = useState(null);
     const [categories, setCategories] = useState([]);
@@ -168,18 +171,54 @@ export default function Budgets() {
     };
     const budgets = budgetData?.budgets || [];
 
+    // Categorize budgets by compliance
+    const exceededBudgets = budgets.filter((b) => b.percentage >= 100);
+    const highAlertBudgets = budgets.filter((b) => b.percentage >= 90 && b.percentage < 100);
+    const cautionBudgets = budgets.filter((b) => b.percentage >= 75 && b.percentage < 90);
+
+    // Days calculation for daily allowance
+    const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+    const isCurrentMonth =
+        now.getMonth() + 1 === selectedMonth && now.getFullYear() === selectedYear;
+    const daysRemaining = isCurrentMonth
+        ? Math.max(1, daysInMonth - now.getDate())
+        : daysInMonth;
+    const dailySpendingAllowance =
+        summary.remaining > 0 ? Number((summary.remaining / daysRemaining).toFixed(2)) : 0;
+
     return (
         <div className="budgets-page">
             {/* Header Strip with Month/Year Switcher */}
             <div className="budget-header-strip">
                 <div>
-                    <h2 className="page-title">Monthly Budgets</h2>
+                    <h2 className="page-title">Budget Guard & Control</h2>
                     <p className="page-subtitle">
-                        Set spending limits and keep your expenses under control
+                        Enforce spending thresholds with real-time alerts at 75%, 90%, and 100% capacity
                     </p>
                 </div>
 
-                <div className="budget-header-actions">
+                <div className="budget-header-actions" style={{ flexWrap: "wrap", gap: "10px" }}>
+                    {/* Quick Demo Month Button */}
+                    <button
+                        className={`period-btn ${selectedMonth === 9 && selectedYear === 2026 ? "active" : ""}`}
+                        onClick={() => {
+                            setSelectedMonth(9);
+                            setSelectedYear(2026);
+                        }}
+                    >
+                        ⭐ September 2026 (Demo)
+                    </button>
+
+                    <button
+                        className={`period-btn ${selectedMonth === now.getMonth() + 1 && selectedYear === now.getFullYear() ? "active" : ""}`}
+                        onClick={() => {
+                            setSelectedMonth(now.getMonth() + 1);
+                            setSelectedYear(now.getFullYear());
+                        }}
+                    >
+                        This Month
+                    </button>
+
                     <div className="period-pill-select">
                         <Calendar size={16} />
                         <select
@@ -211,8 +250,35 @@ export default function Budgets() {
                 </div>
             </div>
 
+            {/* Over-Budget Alert Banner */}
+            {exceededBudgets.length > 0 && (
+                <div
+                    style={{
+                        background: "rgba(239, 68, 68, 0.1)",
+                        border: "1px solid rgba(239, 68, 68, 0.35)",
+                        borderRadius: "12px",
+                        padding: "14px 20px",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "14px",
+                        margin: "16px 0 24px",
+                        fontSize: "14px",
+                    }}
+                >
+                    <ShieldAlert size={22} color="#ef4444" style={{ flexShrink: 0 }} />
+                    <div>
+                        <strong style={{ color: "#ef4444" }}>
+                            Budget Limit Exceeded in {exceededBudgets.length} Categories:
+                        </strong>{" "}
+                        <span>
+                            {exceededBudgets.map((b) => `${b.category} (${b.percentage}%)`).join(", ")}. Immediate spending discipline recommended.
+                        </span>
+                    </div>
+                </div>
+            )}
+
             {/* Monthly Budget Summary Banner */}
-            <div className="glass-card budget-summary-banner">
+            <div className="glass-card budget-summary-banner" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
                 <div className="summary-banner-item">
                     <span>Total Planned Budget</span>
                     <strong>{formatCurrency(summary.totalBudget)}</strong>
@@ -220,7 +286,7 @@ export default function Budgets() {
 
                 <div className="summary-banner-item">
                     <span>Actual Spent</span>
-                    <strong style={{ color: "#c45e5e" }}>
+                    <strong style={{ color: summary.percentage >= 100 ? "#ef4444" : "#c45e5e" }}>
                         {formatCurrency(summary.totalSpent)}
                     </strong>
                 </div>
@@ -229,16 +295,23 @@ export default function Budgets() {
                     <span>Remaining Allowance</span>
                     <strong
                         style={{
-                            color: summary.remaining >= 0 ? "#3d9d52" : "#c45e5e",
+                            color: summary.remaining >= 0 ? "#3d9d52" : "#ef4444",
                         }}
                     >
                         {formatCurrency(summary.remaining)}
                     </strong>
                 </div>
 
-                <div className="summary-banner-progress">
+                <div className="summary-banner-item">
+                    <span>Daily Spending Allowance</span>
+                    <strong style={{ color: "#55ad69" }}>
+                        {formatCurrency(dailySpendingAllowance)}/day
+                    </strong>
+                </div>
+
+                <div className="summary-banner-progress" style={{ gridColumn: "1 / -1", marginTop: "10px" }}>
                     <div className="progress-labels">
-                        <span>Overall Budget Usage</span>
+                        <span>Overall Monthly Budget Utilization</span>
                         <strong>{summary.percentage}%</strong>
                     </div>
                     <div className="overall-progress-bar">
@@ -246,7 +319,7 @@ export default function Budgets() {
                             className={`overall-fill ${
                                 summary.percentage >= 100
                                     ? "fill-danger"
-                                    : summary.percentage >= 80
+                                    : summary.percentage >= 90
                                     ? "fill-warning"
                                     : "fill-good"
                             }`}
@@ -265,7 +338,7 @@ export default function Budgets() {
             )}
 
             {/* Budgets Cards Grid */}
-            <div className="budgets-grid">
+            <div className="budgets-grid" style={{ marginTop: "24px" }}>
                 {loading ? (
                     <div className="glass-card budget-empty-box">
                         Loading monthly budgets...
@@ -286,11 +359,25 @@ export default function Budgets() {
                     </div>
                 ) : (
                     budgets.map((b) => {
-                        const isOver = b.status === "exceeded";
-                        const isNear = b.status === "warning";
+                        const pct = b.percentage;
+                        const isExceeded = pct >= 100;
+                        const isHighAlert = pct >= 90 && pct < 100;
+                        const isWarning = pct >= 75 && pct < 90;
 
                         return (
-                            <div className="glass-card budget-card" key={b.id}>
+                            <div
+                                className="glass-card budget-card"
+                                key={b.id}
+                                style={{
+                                    border: isExceeded
+                                        ? "1px solid rgba(239, 68, 68, 0.45)"
+                                        : isHighAlert
+                                        ? "1px solid rgba(249, 115, 22, 0.4)"
+                                        : isWarning
+                                        ? "1px solid rgba(234, 179, 8, 0.35)"
+                                        : "1px solid rgba(255, 255, 255, 0.08)",
+                                }}
+                            >
                                 <div className="budget-card-header">
                                     <div className="budget-title-left">
                                         <div className="cat-avatar-circle">
@@ -327,10 +414,12 @@ export default function Budgets() {
                                         <span>Spent: {formatCurrency(b.spent)}</span>
                                         <strong
                                             style={{
-                                                color: isOver
-                                                    ? "#c44040"
-                                                    : isNear
-                                                    ? "#d97706"
+                                                color: isExceeded
+                                                    ? "#ef4444"
+                                                    : isHighAlert
+                                                    ? "#f97316"
+                                                    : isWarning
+                                                    ? "#eab308"
                                                     : "#3d9d52",
                                             }}
                                         >
@@ -340,14 +429,21 @@ export default function Budgets() {
                                     <div className="budget-progress-track">
                                         <div
                                             className={`budget-progress-fill ${
-                                                isOver
+                                                isExceeded
                                                     ? "fill-danger"
-                                                    : isNear
+                                                    : isHighAlert || isWarning
                                                     ? "fill-warning"
                                                     : "fill-good"
                                             }`}
                                             style={{
                                                 width: `${Math.min(100, b.percentage)}%`,
+                                                background: isExceeded
+                                                    ? "linear-gradient(to right, #ef4444, #dc2626)"
+                                                    : isHighAlert
+                                                    ? "linear-gradient(to right, #f97316, #ea580c)"
+                                                    : isWarning
+                                                    ? "linear-gradient(to right, #eab308, #ca8a04)"
+                                                    : "linear-gradient(to right, #10b981, #059669)",
                                             }}
                                         />
                                     </div>
@@ -355,28 +451,44 @@ export default function Budgets() {
 
                                 <div className="budget-card-footer">
                                     <div>
-                                        <span className="footer-label">Remaining</span>
+                                        <span className="footer-label">
+                                            {b.remaining >= 0 ? "Remaining" : "Over Budget"}
+                                        </span>
                                         <strong
                                             style={{
-                                                color: b.remaining >= 0 ? "#3d9d52" : "#c44040",
+                                                color: b.remaining >= 0 ? "#3d9d52" : "#ef4444",
                                             }}
                                         >
-                                            {formatCurrency(b.remaining)}
+                                            {formatCurrency(Math.abs(b.remaining))}
                                         </strong>
                                     </div>
 
                                     <div>
-                                        {isOver && (
-                                            <span className="budget-status-pill pill-danger">
-                                                <AlertTriangle size={12} /> Exceeded
+                                        {isExceeded && (
+                                            <span
+                                                className="budget-status-pill pill-danger"
+                                                style={{ background: "rgba(239, 68, 68, 0.2)", color: "#ef4444" }}
+                                            >
+                                                <AlertTriangle size={12} /> 100%+ Exceeded
                                             </span>
                                         )}
-                                        {isNear && (
-                                            <span className="budget-status-pill pill-warning">
-                                                <AlertTriangle size={12} /> Near Limit
+                                        {isHighAlert && (
+                                            <span
+                                                className="budget-status-pill pill-warning"
+                                                style={{ background: "rgba(249, 115, 22, 0.2)", color: "#f97316" }}
+                                            >
+                                                <AlertTriangle size={12} /> 90%+ High Alert
                                             </span>
                                         )}
-                                        {!isOver && !isNear && (
+                                        {isWarning && (
+                                            <span
+                                                className="budget-status-pill pill-warning"
+                                                style={{ background: "rgba(234, 179, 8, 0.2)", color: "#eab308" }}
+                                            >
+                                                <AlertTriangle size={12} /> 75%+ Warning
+                                            </span>
+                                        )}
+                                        {!isExceeded && !isHighAlert && !isWarning && (
                                             <span className="budget-status-pill pill-good">
                                                 <CheckCircle size={12} /> On Track
                                             </span>
@@ -408,39 +520,36 @@ export default function Budgets() {
                         </div>
 
                         {modalError && (
-                            <div className="modal-error-alert">{modalError}</div>
+                            <div className="form-error-banner">{modalError}</div>
                         )}
 
-                        <form onSubmit={handleSubmit} className="modal-form">
+                        <form onSubmit={handleSubmit}>
                             <div className="form-group">
-                                <label>Expense Category *</label>
+                                <label className="form-label">Category</label>
                                 <select
                                     className="form-input"
                                     value={budgetCategory}
                                     onChange={(e) => setBudgetCategory(e.target.value)}
-                                    required
+                                    disabled={modalMode === "edit"}
                                 >
                                     {categories.map((c) => (
                                         <option key={c.id || c.name} value={c.name}>
                                             {c.name}
                                         </option>
                                     ))}
-                                    {categories.length === 0 && (
-                                        <option value="Food">Food</option>
-                                    )}
                                 </select>
                             </div>
 
                             <div className="form-group">
-                                <label>Monthly Limit Amount (₹) *</label>
+                                <label className="form-label">Monthly Limit Amount (₹)</label>
                                 <input
                                     type="number"
-                                    step="1"
-                                    min="1"
-                                    placeholder="e.g. 5000"
                                     className="form-input"
+                                    placeholder="e.g. 15000"
                                     value={budgetAmount}
                                     onChange={(e) => setBudgetAmount(e.target.value)}
+                                    min="1"
+                                    step="0.01"
                                     required
                                     autoFocus
                                 />
@@ -449,20 +558,20 @@ export default function Budgets() {
                             <div className="modal-actions">
                                 <button
                                     type="button"
-                                    className="btn-cancel"
+                                    className="btn-secondary"
                                     onClick={() => setShowModal(false)}
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="btn-submit"
+                                    className="add-tx-btn"
                                     disabled={modalLoading}
                                 >
                                     {modalLoading
                                         ? "Saving..."
                                         : modalMode === "create"
-                                        ? "Save Budget"
+                                        ? "Create Budget"
                                         : "Save Changes"}
                                 </button>
                             </div>
@@ -471,12 +580,12 @@ export default function Budgets() {
                 </div>
             )}
 
-            {/* Delete Confirmation Modal */}
+            {/* Delete Modal */}
             {deleteTarget && (
                 <div className="modal-overlay">
-                    <div className="modal-card" style={{ maxWidth: "400px" }}>
+                    <div className="modal-card" style={{ maxWidth: "380px" }}>
                         <div className="modal-header">
-                            <h3>Remove Budget?</h3>
+                            <h3 style={{ color: "#c44040" }}>Delete Budget</h3>
                             <button
                                 className="modal-close-btn"
                                 onClick={() => setDeleteTarget(null)}
@@ -484,35 +593,24 @@ export default function Budgets() {
                                 <X size={18} />
                             </button>
                         </div>
-
-                        <p
-                            style={{
-                                color: "var(--text-secondary, #666)",
-                                margin: "14px 0",
-                                fontSize: "14px",
-                                lineHeight: "1.6",
-                            }}
-                        >
-                            Are you sure you want to remove the monthly budget for{" "}
-                            <strong>"{deleteTarget.category}"</strong>? Your transaction records
-                            will remain untouched.
+                        <p style={{ margin: "16px 0", color: "var(--text-secondary)", fontSize: "14px" }}>
+                            Are you sure you want to remove the monthly limit for{" "}
+                            <strong>{deleteTarget.category}</strong>?
                         </p>
-
                         <div className="modal-actions">
                             <button
-                                type="button"
-                                className="btn-cancel"
+                                className="btn-secondary"
                                 onClick={() => setDeleteTarget(null)}
                             >
                                 Cancel
                             </button>
                             <button
-                                type="button"
-                                className="btn-delete-confirm"
+                                className="add-tx-btn"
+                                style={{ background: "#c44040" }}
                                 onClick={handleConfirmDelete}
                                 disabled={deleteLoading}
                             >
-                                {deleteLoading ? "Removing..." : "Remove Budget"}
+                                {deleteLoading ? "Deleting..." : "Delete Budget"}
                             </button>
                         </div>
                     </div>

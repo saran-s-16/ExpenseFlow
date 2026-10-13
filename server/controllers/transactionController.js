@@ -9,6 +9,8 @@ export async function getTransactions(req, res) {
             paymentMethod,
             startDate,
             endDate,
+            month,
+            year,
             search,
             sortBy = "date",
             sortOrder = "DESC",
@@ -19,6 +21,26 @@ export async function getTransactions(req, res) {
         const conditions = ["user_id = $1"];
         const params = [userId];
         let paramIndex = 2;
+
+        if (month && !startDate && !endDate) {
+            let mNum, yNum;
+            if (typeof month === "string" && month.includes("-")) {
+                const parts = month.split("-");
+                yNum = parseInt(parts[0], 10);
+                mNum = parseInt(parts[1], 10);
+            } else {
+                mNum = parseInt(month, 10);
+                yNum = parseInt(year, 10) || new Date().getFullYear();
+            }
+            if (mNum >= 1 && mNum <= 12 && yNum > 2000) {
+                conditions.push(`EXTRACT(MONTH FROM date) = $${paramIndex}`);
+                params.push(mNum);
+                paramIndex++;
+                conditions.push(`EXTRACT(YEAR FROM date) = $${paramIndex}`);
+                params.push(yNum);
+                paramIndex++;
+            }
+        }
 
         if (type && (type === "income" || type === "expense")) {
             conditions.push(`type = $${paramIndex}`);

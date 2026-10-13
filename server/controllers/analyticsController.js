@@ -27,7 +27,9 @@ export async function getAnalytics(req, res) {
             pIdx++;
         } else {
             // Apply preset range
-            if (range === "this_month") {
+            if (range === "demo_month" || range === "september_2026") {
+                conditions.push("date >= '2026-09-01'::date AND date <= '2026-09-30'::date");
+            } else if (range === "this_month") {
                 conditions.push("date >= DATE_TRUNC('month', CURRENT_DATE)::date");
             } else if (range === "last_3_months") {
                 conditions.push("date >= (CURRENT_DATE - INTERVAL '3 months')::date");
@@ -135,7 +137,47 @@ export async function getAnalytics(req, res) {
             net: Number(r.income) - Number(r.expense),
         }));
 
-        // 5. Payment Method Breakdown
+        // 5. Daily expense trends (for detailed visualization)
+        const dailyRes = await pool.query(
+            `SELECT
+                TO_CHAR(date, 'DD Mon') AS display_date,
+                date,
+                COALESCE(SUM(amount) FILTER (WHERE type = 'expense'), 0) AS expense,
+                COALESCE(SUM(amount) FILTER (WHERE type = 'income'), 0) AS income
+             FROM transactions
+             WHERE ${whereSql}
+             GROUP BY date
+             ORDER BY date ASC`,
+            params
+        );
+
+        const dailyTrends = dailyRes.rows.map((r) => ({
+            date: r.display_date,
+            fullDate: r.date,
+            expense: Number(r.expense),
+            income: Number(r.income),
+        }));
+
+        // 6. Weekly Spending Comparison
+        const weeklyRes = await pool.query(
+            `SELECT
+                'Week ' || TO_CHAR(date, 'W') AS week,
+                COALESCE(SUM(amount) FILTER (WHERE type = 'expense'), 0) AS expense,
+                COALESCE(SUM(amount) FILTER (WHERE type = 'income'), 0) AS income
+             FROM transactions
+             WHERE ${whereSql}
+             GROUP BY TO_CHAR(date, 'W')
+             ORDER BY TO_CHAR(date, 'W') ASC`,
+            params
+        );
+
+        const weeklyTrends = weeklyRes.rows.map((r) => ({
+            week: r.week,
+            expense: Number(r.expense),
+            income: Number(r.income),
+        }));
+
+        // 7. Payment Method Breakdown
         const pmRes = await pool.query(
             `SELECT
                 COALESCE(payment_method, 'cash') AS payment_method,
@@ -154,7 +196,7 @@ export async function getAnalytics(req, res) {
             count: parseInt(r.count, 10),
         }));
 
-        // 6. Insights generated strictly from real computed data
+        // 8. Insights generated strictly from real computed data
         const insights = [];
         if (totalIncome > 0 && totalExpenses > 0) {
             if (savingsRate >= 20) {
@@ -179,7 +221,7 @@ export async function getAnalytics(req, res) {
             const topCat = categoryBreakdown[0];
             insights.push({
                 type: "info",
-                text: `"${topCat.category}" is your top expense category accounting for ${topCat.percentage}% of spending.`,
+                text: `"${topCat.category}" is your top expense category accounting for ${topCat.percentage}% of spending (₹${topCat.amount.toLocaleString("en-IN")}).`,
             });
         }
 
@@ -196,6 +238,8 @@ export async function getAnalytics(req, res) {
             },
             categoryBreakdown,
             monthlyTrends,
+            dailyTrends,
+            weeklyTrends,
             paymentMethodBreakdown,
             insights,
         });
@@ -211,7 +255,7 @@ export async function getAnalytics(req, res) {
 export async function exportCsv(req, res) {
     try {
         const userId = req.user.id;
-        const { type, category, startDate, endDate } = req.query;
+        const { type, category, startDate, endDate, range } = req.query;
 
         const conditions = ["user_id = $1"];
         const params = [userId];
@@ -233,6 +277,14 @@ export async function exportCsv(req, res) {
             conditions.push(`date >= $${pIdx}::date`);
             params.push(startDate);
             pIdx++;
+        } else if (range === "demo_month" || range === "september_2026") {
+            conditions.push("date >= '2026-09-01'::date AND date <= '2026-09-30'::date");
+        } else if (range === "this_month") {
+            conditions.push("date >= DATE_TRUNC('month', CURRENT_DATE)::date");
+        } else if (range === "last_3_months") {
+            conditions.push("date >= (CURRENT_DATE - INTERVAL '3 months')::date");
+        } else if (range === "this_year") {
+            conditions.push("date >= DATE_TRUNC('year', CURRENT_DATE)::date");
         }
 
         if (endDate) {
